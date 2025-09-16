@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "@/lib/auth";
 import { signOut } from "@/lib/auth-client";
 import { LogOutIcon, ShieldIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
@@ -16,20 +17,16 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
-export function UserDropdown() {
-  // TODO: Render real user info
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    image: undefined,
-    role: "admin",
-  };
+interface UserDropdownProps {
+  user: User;
+}
 
+export function UserDropdown({ user }: UserDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {user.image ? (
+          {user?.image ? (
             <Image
               src={user.image}
               alt={user.name}
@@ -51,8 +48,7 @@ export function UserDropdown() {
             <UserIcon className="size-4" /> <span>Profile</span>
           </Link>
         </DropdownMenuItem>
-        {/* TODO: Hide admin item for non-admin users */}
-        <AdminItem />
+        {user.role === "admin" && <AdminItem />}
         <SignOutItem />
       </DropdownMenuContent>
     </DropdownMenu>
