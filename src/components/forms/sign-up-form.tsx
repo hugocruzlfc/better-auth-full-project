@@ -19,29 +19,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { passwordSchema } from "@/lib/validation";
+import { signUp } from "@/lib/auth-client";
+import { signUpSchema, SignUpValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-const signUpSchema = z
-  .object({
-    name: z.string().min(1, { message: "Name is required" }),
-    email: z.email({ message: "Please enter a valid email" }),
-    password: passwordSchema,
-    passwordConfirmation: z
-      .string()
-      .min(1, { message: "Please confirm password" }),
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    message: "Passwords do not match",
-    path: ["passwordConfirmation"],
-  });
-
-type SignUpValues = z.infer<typeof signUpSchema>;
+import { toast } from "sonner";
 
 export function SignUpForm() {
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +44,21 @@ export function SignUpForm() {
   });
 
   async function onSubmit({ email, password, name }: SignUpValues) {
-    // TODO: Handle sign up
+    setError(null);
+
+    const { error } = await signUp.email({
+      email,
+      password,
+      name,
+      callbackURL: "/email-verified",
+    });
+
+    if (error) {
+      setError(error.message || "Something went wrong");
+    } else {
+      toast.success("Signed up successfully");
+      router.push("/dashboard");
+    }
   }
 
   const loading = form.formState.isSubmitting;

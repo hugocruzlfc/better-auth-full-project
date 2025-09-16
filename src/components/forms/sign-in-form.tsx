@@ -23,20 +23,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { signIn } from "@/lib/auth-client";
+import { signInSchema, SignInValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod/";
-
-const signInSchema = z.object({
-  email: z.email({ message: "Please enter a valid email" }),
-  password: z.string().min(1, { message: "Password is required" }),
-  rememberMe: z.boolean().optional(),
-});
-
-type SignInValues = z.infer<typeof signInSchema>;
+import { toast } from "sonner";
 
 export function SignInForm() {
   const [loading, setLoading] = useState(false);
@@ -44,6 +38,7 @@ export function SignInForm() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
@@ -55,11 +50,39 @@ export function SignInForm() {
   });
 
   async function onSubmit({ email, password, rememberMe }: SignInValues) {
-    // TODO: Handle sign in
+    setError(null);
+    setLoading(true);
+
+    const { error } = await signIn.email({
+      email,
+      password,
+      rememberMe,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setError(error.message || "Something went wrong");
+    } else {
+      toast.success("Signed in successfully");
+      router.push(redirect ?? "/dashboard");
+    }
   }
 
   async function handleSocialSignIn(provider: "google" | "github") {
-    // TODO: Handle social sign in
+    setError(null);
+    setLoading(true);
+
+    const { error } = await signIn.social({
+      provider,
+      callbackURL: redirect ?? "/dashboard",
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setError(error.message || "Something went wrong");
+    }
   }
 
   return (
