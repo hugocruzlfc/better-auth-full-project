@@ -1,7 +1,7 @@
 import { EmailForm } from "@/components/email-form";
+import { PasswordForm } from "@/components/forms/password-form";
+import { ProfileDetailsForm } from "@/components/forms/profile-details-form";
 import { LogoutEverywhereButton } from "@/components/logout-everywhere-button";
-import { PasswordForm } from "@/components/password-form";
-import { ProfileDetailsForm } from "@/components/profile-details-form";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

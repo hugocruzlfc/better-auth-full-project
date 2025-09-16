@@ -28,7 +28,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { z } from "zod/";
 
 const signInSchema = z.object({
   email: z.email({ message: "Please enter a valid email" }),
