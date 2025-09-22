@@ -14,3 +14,7 @@ https://console.prisma.io/cm7d2z6lj00jyj3u74tgzy8on/overview
 
 - pnpm dlx @better-auth/cli@latest secret
 - pnpm dlx @better-auth/cli generate
+
+# React email
+
+https://react.email/docs/integrations/resend

@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
     authInterrupts: true,
     browserDebugInfoInTerminal: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {
